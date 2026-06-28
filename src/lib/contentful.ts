@@ -155,6 +155,20 @@ export async function getVendors() {
   }
 }
 
+export async function getSupporters() {
+  try {
+    const entries = await client.getEntries({
+      content_type: 'supporter',
+      order: ['fields.name'],
+    });
+    console.log("✅ getSupporters() returnerer:", entries.items.length, "supporters");
+    return entries.items;
+  } catch (error) {
+    console.error("❌ Feil i getSupporters():", error);
+    return [];
+  }
+}
+
 export async function getLocation() {
   try {
     const entries = await client.getEntries({

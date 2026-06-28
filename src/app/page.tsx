@@ -1,5 +1,5 @@
 import React from 'react';
-import { getPages, getNavigation, getEvents, getVendors, getLocation, getPracticalInfoItems } from '@/lib/contentful';
+import { getPages, getNavigation, getEvents, getVendors, getSupporters, getLocation, getPracticalInfoItems } from '@/lib/contentful';
 
 export default async function Home() {
   try {
@@ -7,14 +7,15 @@ export default async function Home() {
     const pages = await getPages();
     const events = await getEvents();
     const vendors = await getVendors();
+    const supporters = await getSupporters();
     const location = await getLocation();
     const practicalInfoItems = await getPracticalInfoItems();
 
-    // DEBUG: Sjekk hva vi får
     console.log('practicalInfoItems:', practicalInfoItems);
     console.log('practicalInfoItems length:', practicalInfoItems?.length);
+    console.log('supporters:', supporters);
+    console.log('supporters length:', supporters?.length);
 
-    // Finn hovedturneringen (featured event)
     const mainEvent = events.find((e: any) => e.fields?.title?.includes('Norgesmesterskapet') && e.fields?.day?.includes('8'));
 
     return (
@@ -24,9 +25,9 @@ export default async function Home() {
           <div className="container">
             <div className="header-content">
               <div className="header-left" style={{ display: 'flex', alignItems: 'center' }}>
-                <img 
-                  src="/logomtgnm.png" 
-                  alt="NM Magic 2026 Logo" 
+                <img
+                  src="/logomtgnm.png"
+                  alt="NM Magic 2026 Logo"
                   className="logo-small"
                 />
                 <div className="header-title" style={{ marginLeft: '15px' }}>
@@ -39,7 +40,6 @@ export default async function Home() {
                 {Array.isArray(navigation) &&
                   navigation.map((item: any) => {
                     const href = item.fields?.url || item.fields?.slug || '/';
-
                     return (
                       <a
                         key={item.sys.id}
@@ -58,6 +58,7 @@ export default async function Home() {
 
         {/* MAIN CONTENT */}
         <main className="main-content">
+
           {/* HERO SECTION */}
           <section className="page-section">
             <div className="container">
@@ -111,13 +112,10 @@ export default async function Home() {
                   Blir du vår neste Norgesmester?
                 </p>
               </div>
-
-              {/* NORGESMESTERSKAPET - HOVEDEVENT */}
               <div className="content-box-blue" style={{ marginTop: '30px', marginBottom: '40px' }}>
                 <h3 style={{ color: '#7bc4f0', marginBottom: '15px', fontSize: '1.3em' }}>
                   🎯 Konkurrer om å bli Norgesmester i 2026
                 </h3>
-
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '15px', marginBottom: '20px' }}>
                   <div>
                     <p style={{ margin: '0', color: '#9effc0', fontWeight: '600', fontSize: '0.9em' }}>📅 DAG</p>
@@ -136,13 +134,11 @@ export default async function Home() {
                     <p style={{ margin: '5px 0 0 0', color: 'var(--text-muted)' }}>128</p>
                   </div>
                 </div>
-
                 <div style={{ padding: '15px', backgroundColor: 'rgba(94, 179, 230, 0.1)', borderRadius: '8px', marginBottom: '20px', borderLeft: '3px solid #7bc4f0' }}>
                   <p style={{ margin: '0', color: 'var(--text-muted)' }}>
                     <strong>Format:</strong> 3 Runder Draft → Swiss → Top 8
                   </p>
                 </div>
-
                 <a href="/fullt-program" className="btn btn-primary" style={{ width: '100%', textAlign: 'center' }}>
                   📅 Se fullt program
                 </a>
@@ -158,31 +154,18 @@ export default async function Home() {
                   <h2>🏠 Praktisk Informasjon</h2>
                   <p>Reise, overnatting, mat og andre praktiske detaljer for turneringshelgen</p>
                 </div>
-
                 <div className="grid-2">
                   {practicalInfoItems.map((item: any) => {
-                    // Hent content feltet
                     const content = item.fields?.content;
 
-                    // Funksjon for å renderere rich text content
                     const renderRichText = (richText: any): React.ReactElement => {
                       if (!richText || !richText.content) return <></>;
-
                       return (
                         <>
                           {richText.content.map((block: any, idx: number) => {
-                            // Håndter paragraf blokker
                             if (block.nodeType === 'paragraph') {
                               return (
-                                <p
-                                  key={idx}
-                                  style={{
-                                    margin: '8px 0',
-                                    color: 'var(--text-muted)',
-                                    fontSize: '0.95em',
-                                    lineHeight: '1.6',
-                                  }}
-                                >
+                                <p key={idx} style={{ margin: '8px 0', color: 'var(--text-muted)', fontSize: '0.95em', lineHeight: '1.6' }}>
                                   {block.content?.map((text: any, textIdx: number) => (
                                     <span key={textIdx}>
                                       {text.marks?.some((m: any) => m.type === 'bold') ? (
@@ -197,20 +180,9 @@ export default async function Home() {
                                 </p>
                               );
                             }
-
-                            // Håndter lister
                             if (block.nodeType === 'unordered-list' || block.nodeType === 'ordered-list') {
                               return (
-                                <ul
-                                  key={idx}
-                                  style={{
-                                    margin: '8px 0',
-                                    paddingLeft: '20px',
-                                    color: 'var(--text-muted)',
-                                    fontSize: '0.95em',
-                                    lineHeight: '1.6',
-                                  }}
-                                >
+                                <ul key={idx} style={{ margin: '8px 0', paddingLeft: '20px', color: 'var(--text-muted)', fontSize: '0.95em', lineHeight: '1.6' }}>
                                   {block.content?.map((listItem: any, listIdx: number) => (
                                     <li key={listIdx} style={{ margin: '4px 0' }}>
                                       {listItem.content?.[0]?.content?.[0]?.value}
@@ -219,50 +191,28 @@ export default async function Home() {
                                 </ul>
                               );
                             }
-
-                            // Håndter headings
                             if (block.nodeType === 'heading-1' || block.nodeType === 'heading-2' || block.nodeType === 'heading-3') {
                               const HeadingTag = block.nodeType === 'heading-1' ? 'h4' : block.nodeType === 'heading-2' ? 'h5' : 'h6';
                               return (
-                                <HeadingTag
-                                  key={idx}
-                                  style={{
-                                    margin: '12px 0 8px 0',
-                                    color: '#9effc0',
-                                    fontSize: '0.95em',
-                                    fontWeight: '600',
-                                  }}
-                                >
+                                <HeadingTag key={idx} style={{ margin: '12px 0 8px 0', color: '#9effc0', fontSize: '0.95em', fontWeight: '600' }}>
                                   {block.content?.[0]?.value}
                                 </HeadingTag>
                               );
                             }
-
                             return null;
                           })}
                         </>
                       );
                     };
 
-                    // Håndter både string og rich text
                     let contentElement = null;
                     if (typeof content === 'string') {
-                      // Plain string
                       contentElement = (
-                        <p
-                          style={{
-                            margin: '8px 0',
-                            color: 'var(--text-muted)',
-                            fontSize: '0.95em',
-                            lineHeight: '1.6',
-                            whiteSpace: 'pre-wrap',
-                          }}
-                        >
+                        <p style={{ margin: '8px 0', color: 'var(--text-muted)', fontSize: '0.95em', lineHeight: '1.6', whiteSpace: 'pre-wrap' }}>
                           {content}
                         </p>
                       );
                     } else if (content?.content) {
-                      // Rich text object
                       contentElement = renderRichText(content);
                     }
 
@@ -288,7 +238,7 @@ export default async function Home() {
             </section>
           )}
 
-          {/* VENDORS & HANDLESTEDIER BOLK */}
+          {/* VENDORS BOLK */}
           {Array.isArray(vendors) && vendors.length > 0 && (
             <section className="page-section">
               <div className="container">
@@ -298,11 +248,7 @@ export default async function Home() {
                 </div>
                 <div className="grid-3">
                   {vendors.map((vendor: any) => (
-                    <div
-                      key={vendor.sys.id}
-                      className="content-box-purple"
-                      style={{ textAlign: 'center' }}
-                    >
+                    <div key={vendor.sys.id} className="content-box-purple" style={{ textAlign: 'center' }}>
                       <div style={{ fontSize: '2.5em', marginBottom: '15px' }}>🎯</div>
                       <h3 style={{ color: '#dd99ff', marginBottom: '10px' }}>
                         {String(vendor.fields?.name || 'Unavngitt leverandør')}
@@ -314,6 +260,47 @@ export default async function Home() {
                       )}
                     </div>
                   ))}
+                </div>
+              </div>
+            </section>
+          )}
+
+          {/* STØTTESPILLERE BOLK */}
+          {Array.isArray(supporters) && supporters.length > 0 && (
+            <section className="page-section">
+              <div className="container">
+                <div className="section-header">
+                  <h2>🤝 Støttespillere</h2>
+                  <p>Se de forskjellige samarbeidspartnerne vi jobber med i år</p>
+                </div>
+                <div className="grid-3">
+                  {supporters.map((supporter: any) => {
+                    const iconToUse = supporter.fields?.icon || '🤝';
+                    return (
+                      <div key={supporter.sys.id} className="content-box-purple" style={{ textAlign: 'center' }}>
+                        <div style={{ fontSize: '2.5em', marginBottom: '15px' }}>{iconToUse}</div>
+                        <h3 style={{ color: '#dd99ff', marginBottom: '10px' }}>
+                          {supporter.fields?.url ? (
+                            <a
+                              href={supporter.fields.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              style={{ color: '#dd99ff', textDecoration: 'none' }}
+                            >
+                              {String(supporter.fields?.name || 'Unavngitt støttespiller')}
+                            </a>
+                          ) : (
+                            String(supporter.fields?.name || 'Unavngitt støttespiller')
+                          )}
+                        </h3>
+                        {supporter.fields?.description && typeof supporter.fields.description === 'string' && (
+                          <p style={{ margin: '0', color: 'var(--text-muted)', fontSize: '0.95em', lineHeight: '1.6' }}>
+                            {supporter.fields.description}
+                          </p>
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             </section>
@@ -335,6 +322,7 @@ export default async function Home() {
               </div>
             </div>
           </section>
+
         </main>
 
         {/* FOOTER */}
