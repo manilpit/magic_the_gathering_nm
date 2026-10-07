@@ -131,47 +131,72 @@ export default async function Home() {
                 </p>
               </div>
 
-              <div
-                className="content-box-blue"
-                style={{ marginTop: '30px', marginBottom: '40px' }}
-              >
-                <h3
-                  style={{
-                    color: '#7bc4f0',
-                    marginBottom: '15px',
-                    fontSize: '1.3em',
-                  }}
-                >
-                  🎯 Konkurrer om å bli Norgesmester i 2026
-                </h3>
+                          <div className="content-box-blue" style={{ marginBottom: '40px' }}>
+              <h2 style={{ color: '#7bc4f0', marginBottom: '15px' }}>
+                🎉 Takk for NM 2026!
+              </h2>
 
-                <div
-                  style={{
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
-                    gap: '15px',
-                    marginBottom: '20px',
-                  }}
-                >
-                  <div>
-                    <p
-                      style={{
-                        margin: '0',
-                        color: '#9effc0',
-                        fontWeight: '600',
-                        fontSize: '0.9em',
-                      }}
-                    >
-                      📅 DAG
-                    </p>
-                    <p
-                      style={{
-                        margin: '5px 0 0 0',
-                        color: 'var(--text-muted)',
-                      }}
-                    >
-                      Lørdag 8. august
-                    </p>
+              <p style={{ color: 'var(--text-muted)', lineHeight: '1.7', margin: 0, fontSize: '1.1rem', }}>
+                Takk til alle spillere, dommere, frivillige, vendors og besøkende som
+                bidro til å gjøre NM 2026 til en fantastisk helg.
+              </p>
+
+              <p style={{ color: 'var(--text-muted)', lineHeight: '1.7', marginTop: '15px', fontSize: '1.1rem', }}>
+                Informasjonen som for øyeblikket vises på nettsiden gjelder fortsatt
+                NM 2026. Vi er allerede godt i gang med planleggingen av NM 2027, og
+                informasjon om neste års arrangement vil bli publisert fortløpende
+                etter hvert som den blir klar.
+              </p>
+            </div>
+
+              {/* FEATURED EVENT - Hovedturneringen fra Contentful */}
+              {mainEvent && (
+                <div className="content-box-blue" style={{ marginTop: '30px', marginBottom: '40px' }}>
+                  <h3 style={{ color: '#7bc4f0', marginBottom: '15px', fontSize: '1.3em' }}>
+                    🎯 {safeString(mainEvent.fields?.title) || 'Norgesmesterskapet'}
+                  </h3>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '15px', marginBottom: '20px' }}>
+                    {/* DAG */}
+                    {mainEvent.fields?.date && (
+                      <div>
+                        <p style={{ margin: '0', color: '#9effc0', fontWeight: '600', fontSize: '0.9em' }}>📅 DAG</p>
+                        <p style={{ margin: '5px 0 0 0', color: 'var(--text-muted)' }}>
+                          {formatEventDate(safeString(mainEvent.fields.date))}
+                        </p>
+                      </div>
+                    )}
+
+                    {/* TID */}
+                    {mainEvent.fields?.startTime && (
+                      <div>
+                        <p style={{ margin: '0', color: '#9effc0', fontWeight: '600', fontSize: '0.9em' }}>🕐 TID</p>
+                        <p style={{ margin: '5px 0 0 0', color: 'var(--text-muted)' }}>
+                          {safeString(mainEvent.fields.startTime)}
+                        </p>
+                      </div>
+                    )}
+
+                    {/* FORMAT */}
+                    {mainEvent.fields?.format && (
+                      <div>
+                        <p style={{ margin: '0', color: '#9effc0', fontWeight: '600', fontSize: '0.9em' }}>📋 FORMAT</p>
+                        <p style={{ margin: '5px 0 0 0', color: 'var(--text-muted)' }}>
+                          {safeString(mainEvent.fields.format)}
+                        </p>
+                      </div>
+                    )}
+
+                    {/* MAKS DELTAKERE */}
+                    {mainEvent.fields?.deltakere && (
+                      <div>
+                        <p style={{ margin: '0', color: '#9effc0', fontWeight: '600', fontSize: '0.9em' }}>👥 MAKS DELTAKERE</p>
+                        <p style={{ margin: '5px 0 0 0', color: 'var(--text-muted)' }}>
+                          {safeString(mainEvent.fields.deltakere)}
+                        </p>
+                      </div>
+                    )}
+
                   </div>
 
                   <div>
