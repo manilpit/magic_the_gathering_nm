@@ -68,6 +68,24 @@ export default async function Home() {
                 </p>
               </div>
 
+                          <div className="content-box-blue" style={{ marginBottom: '40px' }}>
+              <h2 style={{ color: '#7bc4f0', marginBottom: '15px' }}>
+                🎉 Takk for NM 2026!
+              </h2>
+
+              <p style={{ color: 'var(--text-muted)', lineHeight: '1.7', margin: 0, fontSize: '1.1rem', }}>
+                Takk til alle spillere, dommere, frivillige, vendors og besøkende som
+                bidro til å gjøre NM 2026 til en fantastisk helg.
+              </p>
+
+              <p style={{ color: 'var(--text-muted)', lineHeight: '1.7', marginTop: '15px', fontSize: '1.1rem', }}>
+                Informasjonen som for øyeblikket vises på nettsiden gjelder fortsatt
+                NM 2026. Vi er allerede godt i gang med planleggingen av NM 2027, og
+                informasjon om neste års arrangement vil bli publisert fortløpende
+                etter hvert som den blir klar.
+              </p>
+            </div>
+
               {/* FEATURED EVENT - Hovedturneringen fra Contentful */}
               {mainEvent && (
                 <div className="content-box-blue" style={{ marginTop: '30px', marginBottom: '40px' }}>
